@@ -1,10 +1,10 @@
 // Interface from Falaise
-#include "falaise/snemo/processing/module.h"
+#include <falaise/snemo/processing/module.h>
 // Any data models we need
 #include <bayeux/mctools/simulated_data.h>
 #include <falaise/snemo/datamodels/calibrated_data.h>
-#include "falaise/snemo/datamodels/tracker_clustering_data.h"
-#include "falaise/snemo/datamodels/particle_track_data.h"
+#include <falaise/snemo/datamodels/tracker_clustering_data.h>
+#include <falaise/snemo/datamodels/particle_track_data.h>
 
 
 class MyAccessThingsModule {
@@ -29,12 +29,12 @@ public:
 		<< k
 		<< ", "
 		<< event.get_entry_serial_tag(k)
-		<< std::endl; 
+		<< std::endl;
     }
 
     // Grab simulated data bank SD
     auto& simData = event.get<mctools::simulated_data>("SD");
-   
+
     //simData.tree_dump();
     std::cout << "Vertex x: " <<  simData.get_vertex().x() << std::endl;
     std::cout << "Vertex y: " <<  simData.get_vertex().y() << std::endl;
@@ -43,26 +43,26 @@ public:
     // Grab calibrated data bank CD
     try {
       const snemo::datamodel::calibrated_data& calData = event.get<snemo::datamodel::calibrated_data>("CD");
-      
+
       const snemo::datamodel::calibrated_data::tracker_hit_collection_type & trackerHits=calData.calibrated_tracker_hits();
       for (snemo::datamodel::calibrated_data::tracker_hit_collection_type::const_iterator   iHit = trackerHits.begin(); iHit != trackerHits.end(); ++iHit) {
 	const snemo::datamodel::calibrated_tracker_hit & trackerHit = iHit->get();
       	std::cout << "Tracker Hit: " << trackerHit.get_x() << "," << trackerHit.get_y() << "," << trackerHit.get_z() << std::endl;
-	
-      }      
-      
+
+      }
+
       const snemo::datamodel::calibrated_data::calorimeter_hit_collection_type & calHits=calData.calibrated_calorimeter_hits();
       for (snemo::datamodel::calibrated_data::calorimeter_hit_collection_type::const_iterator iHit = calHits.begin(); iHit != calHits.end(); ++iHit) {
 	const snemo::datamodel::calibrated_calorimeter_hit & calHit = iHit->get();
       	std::cout << "Cal Hit Energy: " << calHit.get_energy() << std::endl;
-      }      
+      }
 
     }
     catch (std::logic_error& e) {
       std::cerr << "failed to grab CD bank : " << e.what() << std::endl;
       //return dpp::base_module::PROCESS_INVALID;
     }
-    
+
     // Grab clustered data bank TCD
     try {
       const snemo::datamodel::tracker_clustering_data& clusterData = event.get<snemo::datamodel::tracker_clustering_data>("TCD");
@@ -83,7 +83,7 @@ public:
     catch (std::logic_error& e) {
       std::cerr << "failed to grab TCD bank : " << e.what() << std::endl;
     }
-    
+
     // Grab tracked data bank PTD
     try {
       const snemo::datamodel::particle_track_data& trackData = event.get<snemo::datamodel::particle_track_data>("PTD");
