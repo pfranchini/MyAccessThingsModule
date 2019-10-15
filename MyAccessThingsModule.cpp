@@ -71,7 +71,7 @@ public:
     }
     
     if (!data_bank.compare("TCD")){
-      // Grab clustered data bank TCD
+      // Get clustered data bank TCD
       try {
 	const auto& clusterData = event.get<snemo::datamodel::tracker_clustering_data>("TCD");
 	
@@ -118,13 +118,21 @@ public:
       }
     }
     
-    
+
+    write(event);
     return falaise::processing::status::PROCESS_OK;
   
   }
 
 private:
   std::string data_bank{};
+  void write(datatools::things& event) {
+    // Add a new data bank to the event
+    auto& atmProperties = event.add<datatools::properties>("ATMProperties");
+    atmProperties.set_description("Properties added by the AccessThings Module");
+    atmProperties.store("name1", "value1");
+  }
+
 };
 
 FALAISE_REGISTER_MODULE(MyAccessThingsModule)
